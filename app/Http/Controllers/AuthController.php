@@ -16,7 +16,7 @@ class AuthController extends Controller
             return redirect()->route($role . '.index');
         }
 
-        return redirect()->back()->withErrors('Invalid credentials.');
+        return redirect()->back()->withErrors('Email dan password salah.');
     }
 
     public function showLoginForm()

@@ -41,9 +41,12 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                @if($user->role == 'admin') Admin
-                                @elseif($user->role == 'manager') Manager
-                                @else AdminGudang
+                                @if($user->role == 'admin')
+                                    <span class="badge badge-danger">Admin</span>
+                                @elseif($user->role == 'manager')
+                                    <span class="badge badge-primary">Manager</span>
+                                @else
+                                    <span class="badge badge-secondary">Admin Gudang</span>
                                 @endif
                             </td>
                             <td>

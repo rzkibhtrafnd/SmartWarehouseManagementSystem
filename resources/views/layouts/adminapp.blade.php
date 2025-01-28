@@ -68,6 +68,21 @@
             color: #343a40;
         }
 
+        .badge-danger {
+            background-color: #e74a3b; /* Merah untuk Admin */
+            color: white;
+        }
+
+        .badge-primary {
+            background-color: #007bff; /* Biru untuk Manager */
+            color: white;
+        }
+
+        .badge-secondary {
+            background-color: #6c757d; /* Abu-abu untuk Admin Gudang */
+            color: white;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .sidebar {
@@ -105,6 +120,12 @@
         </a>
         <a href="{{ route('admin.gudang.index') }}" class="nav-link {{ request()->routeIs('admin.gudang.index') ? 'active' : '' }}">
             <i class="fas fa-warehouse"></i> Gudang
+        </a>
+        <a href="{{ route('admin.kategori.index') }}" class="nav-link {{ request()->routeIs('admin.kategori.index') ? 'active' : '' }}">
+            <i class="fas fa-list"></i> Kategori
+        </a>
+        <a href="{{ route('admin.produk.index') }}" class="nav-link {{ request()->routeIs('admin.produk.index') ? 'active' : '' }}">
+            <i class="fas fa-boxes"></i> Produk
         </a>
         <a href="{{ route('logout') }}" class="nav-link">
             <i class="fas fa-sign-out-alt"></i> Logout

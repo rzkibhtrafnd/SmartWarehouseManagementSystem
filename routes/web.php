@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\GudangController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\ProdukController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,7 +24,7 @@ Route::get('/', function () {
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('index', function () {
@@ -29,6 +32,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     })->name('index');
     Route::resource('user', PegawaiController::class);
     Route::resource('gudang', GudangController::class);
+    Route::resource('kategori', KategoriController::class);
+    Route::resource('produk', ProdukController::class);
 });
 
 
