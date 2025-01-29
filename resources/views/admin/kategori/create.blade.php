@@ -1,28 +1,27 @@
 @extends('layouts.adminapp')
 
 @section('content')
-<div class="container-fluid mt-5">
-    <div class="card shadow-lg p-4 rounded-lg">
-        <h2 class="text-dark">Tambah Kategori</h2>
+<div class="container mx-auto mt-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Tambah Kategori</h2>
 
         <form action="{{ route('admin.kategori.store') }}" method="POST">
             @csrf
-            <div class="form-group">
-                <label for="nama">Nama</label>
-                <input type="text" class="form-control" id="nama" name="nama" required>
+            <div class="mb-4">
+                <label for="nama" class="block text-gray-700 font-semibold mb-1">Nama</label>
+                <input type="text" id="nama" name="nama" required class="w-full border rounded-lg px-4 py-2">
             </div>
 
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi</label>
-                <input type="text" class="form-control" id="deskripsi" name="deskripsi" required>
+            <div class="mb-4">
+                <label for="deskripsi" class="block text-gray-700 font-semibold mb-1">Deskripsi</label>
+                <input type="text" id="deskripsi" name="deskripsi" required class="w-full border rounded-lg px-4 py-2">
             </div>
 
-            <button type="submit" class="btn btn-primary rounded-pill">Simpan</button>
+            <div class="flex space-x-4">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Simpan</button>
+                <a href="{{ route('admin.kategori.index') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">Kembali</a>
+            </div>
         </form>
-
-        <a href="{{ route('admin.kategori.index') }}" class="btn btn-secondary mt-3">
-            <i class="fas fa-arrow-left"></i> Kembali
-        </a>
     </div>
 </div>
 @endsection

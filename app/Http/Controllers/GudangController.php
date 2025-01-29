@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gudang;
+use App\Models\Produk;  // Tambahkan import Produk
 use Illuminate\Http\Request;
 
 class GudangController extends Controller
@@ -13,6 +14,12 @@ class GudangController extends Controller
     public function index()
     {
         $gudangs = Gudang::paginate(10);
+
+        foreach ($gudangs as $gudang) {
+            $totalStokDiGudang = Produk::where('gudang_id', $gudang->id)->sum('stok');
+            $gudang->kapasitas -= $totalStokDiGudang;
+        }
+
         return view('admin.gudang.index', compact('gudangs'));
     }
 
@@ -65,6 +72,9 @@ class GudangController extends Controller
             'kapasitas' => 'required|integer',
             'status' => 'required|in:aktif,tidak aktif',
         ]);
+
+        $totalStokDiGudang = Produk::where('gudang_id', $gudang->id)->sum('stok');
+        $gudang->kapasitas -= $totalStokDiGudang;
 
         $gudang->update([
             'nama' => $request->nama,

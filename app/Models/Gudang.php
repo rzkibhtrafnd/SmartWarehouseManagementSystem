@@ -16,8 +16,8 @@ class Gudang extends Model
         return $this->hasMany(Produk::class);
     }
 
-    // public function transaksi()
-    // {
-    //     return $this->hasMany(Transaksi::class);
-    // }
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
 }

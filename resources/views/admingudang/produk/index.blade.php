@@ -1,13 +1,10 @@
-@extends('layouts.adminapp')
+@extends('layouts.admingudangapp')
 
 @section('content')
 <div class="container mx-auto mt-8">
     <div class="bg-white shadow-lg rounded-lg p-6">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold text-gray-800">Data Produk</h2>
-            <a href="{{ route('admin.produk.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                <i class="fas fa-plus"></i> Tambah Produk
-            </a>
         </div>
 
         @if(session('success'))
@@ -27,7 +24,7 @@
                     @endforeach
                 </select>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Cari</button>
-                <a href="{{ route('admin.produk.index') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400">Reset</a>
+                <a href="{{ route('admingudang.produk.index') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400">Reset</a>
             </div>
         </form>
 
@@ -42,7 +39,6 @@
                         <th class="px-4 py-2">Gudang</th>
                         <th class="px-4 py-2">Stok</th>
                         <th class="px-4 py-2">Harga</th>
-                        <th class="px-4 py-2">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,18 +50,6 @@
                             <td class="px-4 py-2 border-t">{{ $produk->gudang->nama ?? '-' }}</td>
                             <td class="px-4 py-2 border-t">{{ $produk->stok }}</td>
                             <td class="px-4 py-2 border-t">{{ number_format($produk->harga, 2) }}</td>
-                            <td class="px-4 py-2 border-t flex space-x-2">
-                                <a href="{{ route('admin.produk.edit', $produk->id) }}" class="text-yellow-500 hover:text-yellow-600">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-600">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
                         </tr>
                     @empty
                         <tr>

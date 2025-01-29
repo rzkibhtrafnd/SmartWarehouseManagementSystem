@@ -21,8 +21,8 @@ class Produk extends Model
         return $this->belongsTo(Gudang::class);
     }
 
-    // public function transaksi()
-    // {
-    //     return $this->hasMany(Transaksi::class);
-    // }
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class);
+    }
 }
