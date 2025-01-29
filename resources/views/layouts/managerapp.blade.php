@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Gudang</title>
+    <title>Manager</title>
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
@@ -27,17 +27,13 @@
 
     <!-- Sidebar -->
     <div id="sidebar" class="bg-gray-900 text-white w-72 space-y-8 py-7 px-4 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out">
-        <h2 class="text-3xl font-semibold text-center text-white mb-8">Admin Gudang Dashboard</h2>
+        <h2 class="text-3xl font-semibold text-center text-white mb-8">Manager Dashboard</h2>
         <nav class="space-y-6">
-            <a href="{{ route('admingudang.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 {{ request()->routeIs('admingudang.index') ? 'bg-blue-600' : '' }}">
+            <a href="{{ route('manager.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 {{ request()->routeIs('manager.index') ? 'bg-blue-600' : '' }}">
                 <i class="fas fa-tachometer-alt text-2xl"></i>
                 <span class="text-xl">Dashboard</span>
             </a>
-            <a href="{{ route('admingudang.produk.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 {{ request()->routeIs('admingudang.produk.index') ? 'bg-blue-600' : '' }}">
-                <i class="fas fa-boxes text-2xl"></i>
-                <span class="text-xl">Produk</span>
-            </a>
-            <a href="{{ route('admingudang.transaksi.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 {{ request()->routeIs('admingudang.transaksi.index') ? 'bg-blue-600' : '' }}">
+            <a href="{{ route('manager.transaksi.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 {{ request()->routeIs('manager.transaksi.index') ? 'bg-blue-600' : '' }}">
                 <i class="fas fa-money-bill-wave text-2xl"></i>
                 <span class="text-xl">Transaksi</span>
             </a>

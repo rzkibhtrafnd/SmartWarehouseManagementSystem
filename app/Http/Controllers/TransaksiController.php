@@ -174,6 +174,6 @@ class TransaksiController extends Controller
     {
         $transaksis = Transaksi::with(['produk', 'gudang', 'user'])->get();
         $pdf = PDF::loadView('admingudang.transaksi.downloadPDF', compact('transaksis'));
-        return $pdf->download('downloadPDF.pdf');
+        return $pdf->download('transaksi.pdf');
     }
 }
