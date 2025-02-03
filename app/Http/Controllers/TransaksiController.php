@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use App\Models\Gudang;
 use App\Models\Produk;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Barryvdh\DomPDF\Facade\PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaksiController extends Controller
 {
@@ -19,15 +18,12 @@ class TransaksiController extends Controller
     {
         $query = Transaksi::with(['produk', 'gudang', 'user']);
 
-        // Filter berdasarkan minggu atau bulan
         if ($request->has('filter')) {
             $filter = $request->input('filter');
-            if ($filter == 'weekly') {
-                $query->where('tanggal', '>=', Carbon::now()->startOfWeek())
-                      ->where('tanggal', '<=', Carbon::now()->endOfWeek());
-            } elseif ($filter == 'monthly') {
-                $query->where('tanggal', '>=', Carbon::now()->startOfMonth())
-                      ->where('tanggal', '<=', Carbon::now()->endOfMonth());
+            if ($filter === 'weekly') {
+                $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+            } elseif ($filter === 'monthly') {
+                $query->whereBetween('tanggal', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
             }
         }
 
@@ -62,7 +58,7 @@ class TransaksiController extends Controller
         $stokGudang = Produk::where('gudang_id', $gudang->id)->sum('stok');
 
         // Handle stock overflow
-        if ($request->tipe == 'masuk') {
+        if ($request->tipe === 'masuk') {
             if (($stokGudang + $request->kuantitas) > $gudang->kapasitas) {
                 return redirect()->back()->with('error', 'Kapasitas gudang tidak cukup.');
             }
@@ -87,14 +83,6 @@ class TransaksiController extends Controller
         $produk->save();
 
         return redirect()->route('admingudang.transaksi.index')->with('success', 'Transaksi berhasil dilakukan.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Transaksi $transaksi)
-    {
-        //
     }
 
     /**
@@ -123,7 +111,7 @@ class TransaksiController extends Controller
         $gudang = Gudang::findOrFail($request->gudang_id);
         $stokGudang = Produk::where('gudang_id', $gudang->id)->sum('stok');
 
-        if ($request->tipe == 'masuk') {
+        if ($request->tipe === 'masuk') {
             if (($stokGudang + $request->kuantitas) > $gudang->kapasitas) {
                 return redirect()->back()->with('error', 'Kapasitas gudang tidak cukup.');
             }
@@ -157,7 +145,7 @@ class TransaksiController extends Controller
     {
         $produk = Produk::find($transaksi->produk_id);
 
-        if ($transaksi->tipe == 'masuk') {
+        if ($transaksi->tipe === 'masuk') {
             $produk->stok -= $transaksi->kuantitas;
         } else {
             $produk->stok += $transaksi->kuantitas;
@@ -170,10 +158,45 @@ class TransaksiController extends Controller
         return redirect()->route('admingudang.transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
     }
 
-    public function downloadPDF(Request $request)
+    public function generatePDF(Request $request)
     {
-        $transaksis = Transaksi::with(['produk', 'gudang', 'user'])->get();
-        $pdf = PDF::loadView('admingudang.transaksi.downloadPDF', compact('transaksis'));
-        return $pdf->download('transaksi.pdf');
+        // Ambil data transaksi sesuai filter (jika diterapkan)
+        $query = Transaksi::with(['produk', 'gudang', 'user']);
+
+        if ($request->has('filter')) {
+            $filter = $request->input('filter');
+            if ($filter === 'weekly') {
+                $startDate = Carbon::now()->startOfWeek()->format('Y-m-d');
+                $endDate = Carbon::now()->endOfWeek()->format('Y-m-d');
+                $query->whereBetween('tanggal', [$startDate, $endDate]);
+            } elseif ($filter === 'monthly') {
+                $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+                $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+                $query->whereBetween('tanggal', [$startDate, $endDate]);
+            }
+        } else {
+            // Default to current month if no filter is applied
+            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+
+        $transaksis = $query->get();
+
+        // Hitung total jika perlu
+        $totalMasuk = $transaksis->where('tipe', 'masuk')->count();
+        $totalKeluar = $transaksis->where('tipe', 'keluar')->count();
+        $totalTransaksi = $transaksis->count();
+
+        $pdf = Pdf::loadView('admingudang.transaksi.pdf', [
+            'transaksis' => $transaksis,
+            'totalMasuk' => $totalMasuk,
+            'totalKeluar' => $totalKeluar,
+            'totalTransaksi' => $totalTransaksi,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+
+        return $pdf->download('laporan-transaksi.pdf');
     }
 }

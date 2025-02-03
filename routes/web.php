@@ -10,16 +10,19 @@ use App\Http\Controllers\ProdukGudangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\TransaksiManagerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PDFController;
 
 /*
 |--------------------------------------------------------------------------|
 | Web Routes                                                               |
 |--------------------------------------------------------------------------|
 */
+// Route::get('/download-pdf', [PDFController::class, 'downloadPDF'])->name('download.pdf');
 
 Route::get('/', function () {
     return view('auth.login');
 });
+
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -38,9 +41,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::middleware(['auth', 'role:admingudang'])->prefix('admingudang')->name('admingudang.')->group(function () {
     Route::get('/index', [DashboardController::class, 'Admingudangindex'])->name('index');
     Route::resource('produk', ProdukGudangController::class);
+    Route::get('/transaksi/pdf', [TransaksiController::class, 'generatePDF'])->name('transaksi.pdf');
     Route::resource('transaksi', TransaksiController::class);
-    Route::get('/transaksi/downloadPDF', [TransaksiController::class, 'downloadPDF'])->name('transaksi.downloadPDF');
 });
+
 
 // Routes for Manager
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
