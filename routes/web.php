@@ -6,11 +6,8 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProdukController;
-use App\Http\Controllers\ProdukGudangController;
 use App\Http\Controllers\TransaksiController;
-use App\Http\Controllers\TransaksiManagerController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PDFController;
 
 /*
 |--------------------------------------------------------------------------|
@@ -40,7 +37,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 // Routes for Admingudang
 Route::middleware(['auth', 'role:admingudang'])->prefix('admingudang')->name('admingudang.')->group(function () {
     Route::get('/index', [DashboardController::class, 'Admingudangindex'])->name('index');
-    Route::resource('produk', ProdukGudangController::class);
+    Route::resource('produk', ProdukController::class);
     Route::get('/transaksi/pdf', [TransaksiController::class, 'generatePDF'])->name('transaksi.pdf');
     Route::resource('transaksi', TransaksiController::class);
 });
@@ -49,6 +46,6 @@ Route::middleware(['auth', 'role:admingudang'])->prefix('admingudang')->name('ad
 // Routes for Manager
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::get('/index', [DashboardController::class, 'Managerindex'])->name('index');
-    Route::resource('transaksi', TransaksiManagerController::class);
-    Route::get('/transaksi/downloadPDF', [TransaksiManagerController::class, 'downloadPDF'])->name('transaksi.downloadPDF');
+    Route::resource('transaksi', TransaksiController::class);
+    Route::get('/transaksi/downloadPDF', [TransaksiController::class, 'downloadPDF'])->name('transaksi.downloadPDF');
 });

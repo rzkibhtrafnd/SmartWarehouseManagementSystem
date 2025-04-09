@@ -6,6 +6,7 @@ use App\Models\Produk;
 use App\Models\Kategori;
 use App\Models\Gudang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
 {
@@ -22,15 +23,17 @@ class ProdukController extends Controller
 
         $kategoris = Kategori::all();
 
-        return view('admin.produk.index', compact('produks', 'kategoris'));
+        $view = Auth::user()->role === 'admingudang' ? 'admingudang.produk.index' : 'admin.produk.index';
+        return view($view, compact('produks', 'kategoris'));
     }
 
     public function create()
     {
         $gudangs = Gudang::all();
         $kategoris = Kategori::all();
+        $view = Auth::user()->role === 'admingudang' ? 'admingudang.produk.create' : 'admin.produk.create';
 
-        return view('admin.produk.create', compact('gudangs', 'kategoris'));
+        return view($view, compact('gudangs', 'kategoris'));
     }
 
     public function store(Request $request)
@@ -56,15 +59,17 @@ class ProdukController extends Controller
         $gudang->kapasitas -= $request->stok;
         $gudang->save();
 
-        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan.');
+        $route = Auth::user()->role === 'admingudang' ? 'admingudang.produk.index' : 'admin.produk.index';
+        return redirect()->route($route)->with('success', 'Produk berhasil ditambahkan.');
     }
 
     public function edit(Produk $produk)
     {
         $gudangs = Gudang::all();
         $kategoris = Kategori::all();
+        $view = Auth::user()->role === 'admingudang' ? 'admingudang.produk.edit' : 'admin.produk.edit';
 
-        return view('admin.produk.edit', compact('produk', 'gudangs', 'kategoris'));
+        return view($view, compact('produk', 'gudangs', 'kategoris'));
     }
 
     public function update(Request $request, Produk $produk)
@@ -96,13 +101,14 @@ class ProdukController extends Controller
 
         $produk->update($request->all());
 
-        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui.');
+        $route = Auth::user()->role === 'admingudang' ? 'admingudang.produk.index' : 'admin.produk.index';
+        return redirect()->route($route)->with('success', 'Produk berhasil diperbarui.');
     }
 
     public function destroy(Produk $produk)
     {
         $produk->delete();
-        return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil dihapus.');
+        $route = Auth::user()->role === 'admingudang' ? 'admingudang.produk.index' : 'admin.produk.index';
+        return redirect()->route($route)->with('success', 'Produk berhasil dihapus.');
     }
 }
-

@@ -53,7 +53,7 @@
 
                             <td class="px-4 py-2 border-t">{{ $transaksi->gudang->nama }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->user->name }}</td>
-                            <td class="px-4 py-2 border-t">{{ \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y H:i') }}</td>
+                            <td class="px-4 py-2 border-t">{{ \Carbon\Carbon::parse($transaksi->tanggal)->setTimezone('Asia/Jakarta')->format('d-m-Y H:i') }}</td>
                             <td class="px-4 py-2 border-t">
                                 <span class="{{ $transaksi->tipe == 'masuk' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }} text-sm px-2 py-1 rounded">
                                     {{ ucfirst($transaksi->tipe) }}

@@ -51,9 +51,18 @@
 <body>
 
     <div class="header">
-        <h1>Laporan Transaksi</h1>
-        <p>Generated on: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}</p>
-    </div>
+        <div class="title-section">
+          <h1>Laporan Transaksi</h1>
+          @if($startDate && $endDate)
+            <p class="subtitle">Periode: {{ $startDate }} hingga {{ $endDate }}</p>
+          @endif
+        </div>
+        <div class="header-info">
+          <!-- Mengatur zona waktu ke Asia/Jakarta -->
+          <p>Dibuat pada: {{ \Carbon\Carbon::now()->setTimezone('Asia/Jakarta')->format('d/m/Y H:i') }}</p>
+          <p>Halaman 1 dari 1</p>
+        </div>
+      </div>
 
     <table>
         <thead>

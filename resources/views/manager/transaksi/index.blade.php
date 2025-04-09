@@ -6,18 +6,26 @@
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold text-gray-800">Data Transaksi</h2>
         </div>
-        <form method="GET" action="{{ route('admingudang.transaksi.index') }}" class="mb-4">
-            <select name="filter" class="px-4 py-2 border rounded">
-                <option value="weekly" {{ request('filter') == 'weekly' ? 'selected' : '' }}>Mingguan</option>
-                <option value="monthly" {{ request('filter') == 'monthly' ? 'selected' : '' }}>Bulanan</option>
-            </select>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Filter</button>
-            <a href="{{ route('admingudang.transaksi.downloadPDF') }}" class="bg-red-500 text-white px-4 py-2 rounded-md">Unduh PDF</a>
+
+        <!-- Filter tanggal dan PDF -->
+        <form method="GET" action="{{ route('manager.transaksi.index') }}" class="mb-4">
+            <div class="flex gap-2 items-center">
+                <input type="date" name="start_date" class="px-4 py-2 border rounded" value="{{ request('start_date') }}">
+                <span>sampai</span>
+                <input type="date" name="end_date" class="px-4 py-2 border rounded" value="{{ request('end_date') }}">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Filter
+                </button>
+                <a href="{{ route('manager.transaksi.downloadPDF', request()->query()) }}"
+                   class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Unduh PDF
+                </a>
+            </div>
         </form>
 
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-                <span>{{ session('success') }}</span>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session('success') }}
             </div>
         @endif
 
@@ -40,7 +48,6 @@
                             <td class="px-4 py-2 border-t">{{ $loop->iteration }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->produk->nama }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->kuantitas }}</td>
-
                             <td class="px-4 py-2 border-t">{{ $transaksi->gudang->nama }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->user->name }}</td>
                             <td class="px-4 py-2 border-t">{{ \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y H:i') }}</td>
@@ -59,7 +66,6 @@
             </table>
         </div>
 
-        <!-- Pagination -->
         {{ $transaksis->links() }}
     </div>
 </div>
