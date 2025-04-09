@@ -10,12 +10,18 @@
             </a>
         </div>
         <form method="GET" action="{{ route('admingudang.transaksi.index') }}" class="mb-4">
-            <select name="filter" class="px-4 py-2 border rounded">
-                <option value="weekly" {{ request('filter') == 'weekly' ? 'selected' : '' }}>Mingguan</option>
-                <option value="monthly" {{ request('filter') == 'monthly' ? 'selected' : '' }}>Bulanan</option>
-            </select>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Filter</button>
-            <a href="{{ route('admingudang.transaksi.pdf', request()->query()) }}" class="bg-red-500 text-white px-4 py-2 rounded-md">Unduh PDF</a>
+            <div class="flex gap-2 items-center">
+                <input type="date" name="start_date" class="px-4 py-2 border rounded" value="{{ request('start_date') }}">
+                <span>sampai</span>
+                <input type="date" name="end_date" class="px-4 py-2 border rounded" value="{{ request('end_date') }}">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Filter
+                </button>
+                <a href="{{ route('admingudang.transaksi.pdf', request()->query()) }}" 
+                   class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Unduh PDF
+                </a>
+            </div>
         </form>
 
         @if(session('success'))

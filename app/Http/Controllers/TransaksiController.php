@@ -18,13 +18,11 @@ class TransaksiController extends Controller
     {
         $query = Transaksi::with(['produk', 'gudang', 'user']);
 
-        if ($request->has('filter')) {
-            $filter = $request->input('filter');
-            if ($filter === 'weekly') {
-                $query->whereBetween('tanggal', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
-            } elseif ($filter === 'monthly') {
-                $query->whereBetween('tanggal', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
-            }
+        // Filter berdasarkan tanggal
+        if ($request->filled(['start_date', 'end_date'])) {
+            $startDate = Carbon::parse($request->start_date)->startOfDay();
+            $endDate = Carbon::parse($request->end_date)->endOfDay();
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
         $transaksis = $query->paginate(30);
@@ -160,32 +158,20 @@ class TransaksiController extends Controller
 
     public function generatePDF(Request $request)
     {
-        // Ambil data transaksi sesuai filter (jika diterapkan)
         $query = Transaksi::with(['produk', 'gudang', 'user']);
 
-        if ($request->has('filter')) {
-            $filter = $request->input('filter');
-            if ($filter === 'weekly') {
-                $startDate = Carbon::now()->startOfWeek()->format('Y-m-d');
-                $endDate = Carbon::now()->endOfWeek()->format('Y-m-d');
-                $query->whereBetween('tanggal', [$startDate, $endDate]);
-            } elseif ($filter === 'monthly') {
-                $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
-                $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
-                $query->whereBetween('tanggal', [$startDate, $endDate]);
-            }
-        } else {
-            // Default to current month if no filter is applied
-            $startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $endDate = Carbon::now()->endOfMonth()->format('Y-m-d');
+        // Filter berdasarkan tanggal
+        if ($request->filled(['start_date', 'end_date'])) {
+            $startDate = Carbon::parse($request->start_date)->startOfDay();
+            $endDate = Carbon::parse($request->end_date)->endOfDay();
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
         $transaksis = $query->get();
-
-        // Hitung total jika perlu
-        $totalMasuk = $transaksis->where('tipe', 'masuk')->count();
-        $totalKeluar = $transaksis->where('tipe', 'keluar')->count();
+        
+        // Hitung total
+        $totalMasuk = $transaksis->where('tipe', 'masuk')->sum('kuantitas');
+        $totalKeluar = $transaksis->where('tipe', 'keluar')->sum('kuantitas');
         $totalTransaksi = $transaksis->count();
 
         $pdf = Pdf::loadView('admingudang.transaksi.pdf', [
@@ -193,8 +179,8 @@ class TransaksiController extends Controller
             'totalMasuk' => $totalMasuk,
             'totalKeluar' => $totalKeluar,
             'totalTransaksi' => $totalTransaksi,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'startDate' => $request->start_date ?? '-',
+            'endDate' => $request->end_date ?? '-',
         ]);
 
         return $pdf->download('laporan-transaksi.pdf');

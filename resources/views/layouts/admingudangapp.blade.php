@@ -56,7 +56,7 @@
       </a>
     </nav>
     <div class="absolute bottom-4 left-0 right-0 text-center text-gray-400 text-xs">
-      &copy; {{ date('Y') }} InvoicerPro
+      &copy; {{ date('Y') }} SmartWarehouse
     </div>
   </div>
 
