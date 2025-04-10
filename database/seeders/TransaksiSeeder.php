@@ -13,16 +13,23 @@ class TransaksiSeeder extends Seeder
         $faker = Faker::create();
 
         foreach (range(1, 100) as $i) {
-            DB::table('transaksi')->insert([
-                'produk_id' => $faker->numberBetween(1, 50),     // asumsikan ada 50 produk
+            $tipe = $faker->randomElement(['masuk', 'keluar']);
+            
+            $transaksiData = [
+                'produk_id' => $faker->numberBetween(1, 50),
                 'kuantitas' => $faker->numberBetween(1, 100),
-                'tipe' => $faker->randomElement(['masuk', 'keluar']),
-                'gudang_id' => $faker->numberBetween(1, 10),      // asumsikan ada 10 gudang
-                'user_id' => $faker->numberBetween(1, 3),         // asumsikan ada 3 user
+                'tipe' => $tipe,
+                'user_id' => $faker->numberBetween(1, 3),
                 'tanggal' => $faker->dateTimeBetween('-1 year', 'now'),
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]);
+            ];
+
+            if ($tipe === 'masuk' || $faker->boolean(30)) {
+                $transaksiData['gudang_id'] = $faker->numberBetween(1, 10);
+            }
+
+            DB::table('transaksi')->insert($transaksiData);
         }
     }
 }

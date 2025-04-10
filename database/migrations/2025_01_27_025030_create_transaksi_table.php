@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('produk_id')->constrained('produk');
             $table->integer('kuantitas');
             $table->enum('tipe', ['masuk', 'keluar']);
-            $table->foreignId('gudang_id')->constrained('gudang');
+            $table->foreignId('gudang_id')->nullable()->constrained('gudang');
             $table->foreignId('user_id')->constrained('users');
             $table->timestamp('tanggal')->useCurrent();
             $table->timestamps();

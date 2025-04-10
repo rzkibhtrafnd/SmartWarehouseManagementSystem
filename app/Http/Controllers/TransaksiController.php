@@ -63,7 +63,7 @@ class TransaksiController extends Controller
             'produk_id' => 'required|exists:produk,id',
             'kuantitas' => 'required|integer|min:1',
             'tipe' => 'required|in:masuk,keluar',
-            'gudang_id' => 'required|exists:gudang,id',
+            'gudang_id' => 'required_if:tipe,masuk|nullable|exists:gudang,id',
         ]);
 
         $produk = Produk::findOrFail($request->produk_id);
@@ -116,7 +116,7 @@ class TransaksiController extends Controller
             'produk_id' => 'required|exists:produk,id',
             'kuantitas' => 'required|integer|min:1',
             'tipe' => 'required|in:masuk,keluar',
-            'gudang_id' => 'required|exists:gudang,id',
+            'gudang_id' => 'required_if:tipe,masuk|nullable|exists:gudang,id',
         ]);
 
         $produk = Produk::findOrFail($request->produk_id);
@@ -185,7 +185,7 @@ class TransaksiController extends Controller
         $totalTransaksi = $transaksis->count();
 
         $view = auth()->user()->role === 'manager'
-            ? 'manager.transaksi.downloadPDF'
+            ? 'manager.transaksi.pdf'
             : 'admingudang.transaksi.pdf';
 
         $pdf = Pdf::loadView($view, [

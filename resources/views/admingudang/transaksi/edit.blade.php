@@ -39,9 +39,10 @@
                 @error('tipe') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4" id="gudang-field">
                 <label for="gudang_id" class="block text-gray-700 font-semibold mb-1">Gudang</label>
                 <select name="gudang_id" id="gudang_id" class="w-full border rounded-lg px-4 py-2">
+                    <option value="">Pilih Gudang</option>
                     @foreach ($gudangs as $gudang)
                         <option value="{{ $gudang->id }}" {{ $transaksi->gudang_id == $gudang->id ? 'selected' : '' }}>{{ $gudang->nama }}</option>
                     @endforeach
@@ -57,3 +58,22 @@
     </div>
 </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipeSelect = document.getElementById('tipe');
+        const gudangField = document.getElementById('gudang-field');
+    
+        function toggleGudangField() {
+            if (tipeSelect.value === 'masuk') {
+                gudangField.style.display = 'block';
+            } else {
+                gudangField.style.display = 'none';
+                document.getElementById('gudang_id').value = '';
+            }
+        }
+    
+        tipeSelect.addEventListener('change', toggleGudangField);
+        toggleGudangField();
+    });
+</script>

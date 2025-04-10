@@ -16,7 +16,7 @@
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                     Filter
                 </button>
-                <a href="{{ route('manager.transaksi.downloadPDF', request()->query()) }}"
+                <a href="{{ route('manager.transaksi.pdf', request()->query()) }}"
                    class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
                     Unduh PDF
                 </a>
@@ -48,7 +48,7 @@
                             <td class="px-4 py-2 border-t">{{ $loop->iteration }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->produk->nama }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->kuantitas }}</td>
-                            <td class="px-4 py-2 border-t">{{ $transaksi->gudang->nama }}</td>
+                            <td class="px-4 py-2 border-t">{{ $transaksi->gudang->nama ?? '-' }}</td>
                             <td class="px-4 py-2 border-t">{{ $transaksi->user->name }}</td>
                             <td class="px-4 py-2 border-t">{{ \Carbon\Carbon::parse($transaksi->tanggal)->format('d-m-Y H:i') }}</td>
                             <td class="px-4 py-2 border-t">

@@ -46,6 +46,6 @@ Route::middleware(['auth', 'role:admingudang'])->prefix('admingudang')->name('ad
 // Routes for Manager
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->name('manager.')->group(function () {
     Route::get('/index', [DashboardController::class, 'Managerindex'])->name('index');
+    Route::get('/transaksi/pdf', [TransaksiController::class, 'generatePDF'])->name('transaksi.pdf');
     Route::resource('transaksi', TransaksiController::class);
-    Route::get('/transaksi/downloadPDF', [TransaksiController::class, 'downloadPDF'])->name('transaksi.downloadPDF');
 });
