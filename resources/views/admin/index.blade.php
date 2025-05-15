@@ -3,86 +3,224 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="container mx-auto mt-8">
-    <div class="bg-white shadow-lg rounded-lg p-6">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Selamat datang, {{ auth()->user()->name }}</h2>
+<div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+    <!-- Welcome Banner -->
+    <div class="mb-8">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 shadow-lg">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">Selamat Datang, {{ auth()->user()->name }}</h1>
+                    <p class="text-blue-100">Analisis kinerja gudang terkini</p>
+                </div>
+                <div class="flex space-x-4">
+                    <div class="bg-white/10 p-4 rounded-lg text-center">
+                        <p class="text-sm text-blue-50">Total Gudang</p>
+                        <p class="text-2xl font-bold text-white">{{ $totalGudangAktif }}</p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-lg text-center">
+                        <p class="text-sm text-blue-50">Total Produk</p>
+                        <p class="text-2xl font-bold text-white">{{ $totalProduk }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-blue-500 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-            <h5 class="text-lg font-semibold mb-2">Total Gudang Aktif</h5>
-            <p class="text-3xl font-bold">{{ $totalGudangAktif }}</p>
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Gudang Card -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-all">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-warehouse text-blue-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Gudang Aktif</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ $totalGudangAktif }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Update terakhir: Hari ini</p>
+                </div>
+                <div class="text-green-500">
+                    <i class="fas fa-chart-line text-2xl"></i>
+                </div>
+            </div>
         </div>
 
-        <div class="bg-green-500 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-            <h5 class="text-lg font-semibold mb-2">Total Kategori</h5>
-            <p class="text-3xl font-bold">{{ $totalKategori }}</p>
+        <!-- Kategori Card -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-all">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-tags text-purple-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Total Kategori</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ $totalKategori }}</p>
+                    <p class="text-sm text-gray-500 mt-2">+5% dari bulan lalu</p>
+                </div>
+                <div class="text-purple-500">
+                    <i class="fas fa-chart-pie text-2xl"></i>
+                </div>
+            </div>
         </div>
 
-        <div class="bg-yellow-500 text-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
-            <h5 class="text-lg font-semibold mb-2">Total Produk</h5>
-            <p class="text-3xl font-bold">{{ $totalProduk }}</p>
+        <!-- Produk Card -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 hover:shadow-lg transition-all">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-boxes text-orange-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Total Produk</h3>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ $totalProduk }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Stok tersedia</p>
+                </div>
+                <div class="text-orange-500">
+                    <i class="fas fa-chart-bar text-2xl"></i>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Charts Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-        <!-- Stok Tertinggi & Terendah -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">10 Stok Tertinggi & Terendah</h3>
-            <canvas id="stokChart"></canvas>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Stok Chart -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold">Distribusi Stok Produk</h3>
+                <div class="flex space-x-2">
+                    <button class="text-sm px-3 py-1 rounded-lg bg-blue-50 text-blue-600">30 Hari</button>
+                    <button class="text-sm px-3 py-1 rounded-lg hover:bg-gray-50">1 Tahun</button>
+                </div>
+            </div>
+            <div class="h-80">
+                <canvas id="stokChart"></canvas>
+            </div>
         </div>
 
-        <!-- Kapasitas Gudang -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">5 Gudang Kapasitas Tertinggi & Terendah</h3>
-            <canvas id="gudangChart"></canvas>
+        <!-- Kapasitas Chart -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold">Utilisasi Kapasitas Gudang</h3>
+                <div class="text-gray-500">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+            </div>
+            <div class="h-80">
+                <canvas id="gudangChart"></canvas>
+            </div>
         </div>
-    </div>
     </div>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <script>
-    // Data untuk chart Stok Produk
-    var stokLabels = {!! json_encode($stokTertinggi->pluck('nama')->merge($stokTerendah->pluck('nama'))) !!};
-    var stokData = {!! json_encode($stokTertinggi->pluck('stok')->merge($stokTerendah->pluck('stok'))) !!};
-
-    var ctx1 = document.getElementById('stokChart').getContext('2d');
-    new Chart(ctx1, {
+    // Stok Chart
+    const stokChart = new Chart(document.getElementById('stokChart'), {
         type: 'bar',
         data: {
-            labels: stokLabels,
+            labels: {!! json_encode($stokTertinggi->pluck('nama')->merge($stokTerendah->pluck('nama'))) !!},
             datasets: [{
-                label: 'Jumlah Stok',
-                data: stokData,
-                backgroundColor: stokLabels.map((_, i) => i < 10 ? 'rgba(54, 162, 235, 0.7)' : 'rgba(255, 99, 132, 0.7)'),
-                borderColor: stokLabels.map((_, i) => i < 10 ? 'rgba(54, 162, 235, 1)' : 'rgba(255, 99, 132, 1)'),
-                borderWidth: 1
+                label: 'Stok Produk',
+                data: {!! json_encode($stokTertinggi->pluck('stok')->merge($stokTerendah->pluck('stok'))) !!},
+                backgroundColor: [
+                    'rgba(79, 70, 229, 0.7)',
+                    'rgba(99, 102, 241, 0.7)',
+                    'rgba(129, 140, 248, 0.7)',
+                    'rgba(165, 180, 252, 0.7)',
+                    'rgba(199, 210, 254, 0.7)',
+                    'rgba(239, 68, 68, 0.7)',
+                    'rgba(248, 113, 113, 0.7)',
+                    'rgba(252, 165, 165, 0.7)',
+                    'rgba(254, 202, 202, 0.7)',
+                    'rgba(255, 228, 230, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(79, 70, 229, 1)',
+                    'rgba(99, 102, 241, 1)',
+                    'rgba(129, 140, 248, 1)',
+                    'rgba(165, 180, 252, 1)',
+                    'rgba(199, 210, 254, 1)',
+                    'rgba(239, 68, 68, 1)',
+                    'rgba(248, 113, 113, 1)',
+                    'rgba(252, 165, 165, 1)',
+                    'rgba(254, 202, 202, 1)',
+                    'rgba(255, 228, 230, 1)'
+                ],
+                borderWidth: 1,
+                borderRadius: 8
             }]
         },
-        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1F2937',
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 14 },
+                    padding: 12
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#E5E7EB' },
+                    ticks: { color: '#6B7280' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#6B7280' }
+                }
+            }
+        }
     });
 
-    // Data untuk chart Kapasitas Gudang
-    var gudangLabels = {!! json_encode($kapasitasTertinggi->pluck('nama')->merge($kapasitasTerendah->pluck('nama'))) !!};
-    var gudangData = {!! json_encode($kapasitasTertinggi->pluck('kapasitas')->merge($kapasitasTerendah->pluck('kapasitas'))) !!};
-
-    var ctx2 = document.getElementById('gudangChart').getContext('2d');
-    new Chart(ctx2, {
+    // Kapasitas Chart
+    const gudangChart = new Chart(document.getElementById('gudangChart'), {
         type: 'bar',
         data: {
-            labels: gudangLabels,
+            labels: {!! json_encode($kapasitasTertinggi->pluck('nama')->merge($kapasitasTerendah->pluck('nama'))) !!},
             datasets: [{
-                label: 'Total Kapasitas',
-                data: gudangData,
-                backgroundColor: gudangLabels.map((_, i) => i < 5 ? 'rgba(75, 192, 192, 0.7)' : 'rgba(255, 159, 64, 0.7)'),
-                borderColor: gudangLabels.map((_, i) => i < 5 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 159, 64, 1)'),
-                borderWidth: 1
+                label: 'Kapasitas',
+                data: {!! json_encode($kapasitasTertinggi->pluck('kapasitas')->merge($kapasitasTerendah->pluck('kapasitas'))) !!},
+                backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                borderColor: 'rgba(16, 185, 129, 1)',
+                borderWidth: 1,
+                borderRadius: 8
             }]
         },
-        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1F2937',
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 14 },
+                    padding: 12
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#E5E7EB' },
+                    ticks: { color: '#6B7280' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#6B7280' }
+                }
+            }
+        }
     });
 </script>
+
 @endsection

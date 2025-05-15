@@ -4,68 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Gudang</title>
-  <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <!-- Font Awesome CDN -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <style>
-    /* Custom Styles */
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-    /* Additional styles for transition */
-    .transition-transform {
-      transition: transform 0.3s ease;
+    [x-cloak] { display: none !important; }
+    .sidebar-hover:hover {
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 4px solid #3B82F6;
     }
   </style>
 </head>
-<body class="bg-gray-100">
-  <!-- Navbar -->
-  <nav class="bg-gradient-to-r from-gray-800 to-gray-900 p-4 md:hidden flex justify-between items-center shadow-md">
-    <button class="text-white focus:outline-none" onclick="toggleSidebar()">
-      <i class="fas fa-bars text-2xl"></i>
+<body class="bg-gray-50 font-sans">
+  <!-- Mobile Navbar -->
+  <nav class="sticky top-0 bg-white border-b border-gray-200 p-4 md:hidden flex justify-between items-center z-30">
+    <button class="text-gray-600 hover:text-gray-800" onclick="toggleSidebar()">
+      <i class="fas fa-bars text-xl"></i>
     </button>
-    <div class="text-white text-xl font-semibold">Admin Gudang</div>
-    <div></div>
+    <div class="flex items-center space-x-4">
+      <div class="relative">
+        <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}"
+             class="w-8 h-8 rounded-full cursor-pointer"
+             id="profileMenuButton">
+      </div>
+    </div>
   </nav>
 
   <!-- Sidebar -->
-  <div id="sidebar" class="bg-gradient-to-b from-gray-900 to-gray-800 text-white w-72 space-y-8 py-8 px-4 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl">
-    <div class="text-center mb-8">
-      <h2 class="text-3xl font-bold">Admin Gudang Dashboard</h2>
-      <p class="text-sm text-gray-300">{{ auth()->user()->name }}</p>
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-xl transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+    <div class="flex flex-col h-full">
+      <div class="p-6 mb-4">
+        <h1 class="text-xl font-bold text-gray-800">SmartWarehouse</h1>
+        <p class="text-sm text-gray-500 mt-1">Gudang Management</p>
+      </div>
+
+      <nav class="flex-1 px-3 space-y-1">
+        @foreach([
+          ['route' => 'admingudang.index', 'icon' => 'table-columns', 'label' => 'Dashboard'],
+          ['route' => 'admingudang.produk.index', 'icon' => 'box', 'label' => 'Produk'],
+          ['route' => 'admingudang.transaksi.index', 'icon' => 'money-bill-wave', 'label' => 'Transaksi']
+        ] as $item)
+          <a href="{{ route($item['route']) }}"
+             class="flex items-center p-3 text-gray-600 rounded-lg transition-all
+                    {{ request()->routeIs($item['route']) ? 'bg-blue-50 text-blue-600 font-medium' : 'hover:bg-gray-50' }}">
+            <i class="fas fa-{{ $item['icon'] }} w-5 mr-3 text-center"></i>
+            {{ $item['label'] }}
+          </a>
+        @endforeach
+      </nav>
+
+      <div class="p-4 border-t border-gray-100">
+        <a href="{{ route('logout') }}"
+           class="flex items-center p-3 text-red-600 hover:bg-red-50 rounded-lg transition-all">
+          <i class="fas fa-sign-out-alt mr-3"></i>
+          Logout
+        </a>
+        <div class="text-center text-xs text-gray-400 mt-2">
+          &copy; {{ date('Y') }} SmartWarehouse v2.0
+        </div>
+      </div>
     </div>
-    <nav class="space-y-4">
-      <a href="{{ route('admingudang.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors {{ request()->routeIs('admingudang.index') ? 'bg-blue-600' : '' }}">
-        <i class="fas fa-tachometer-alt text-2xl"></i>
-        <span class="text-xl">Dashboard</span>
-      </a>
-      <a href="{{ route('admingudang.produk.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors {{ request()->routeIs('admingudang.produk.index') ? 'bg-blue-600' : '' }}">
-        <i class="fas fa-boxes text-2xl"></i>
-        <span class="text-xl">Produk</span>
-      </a>
-      <a href="{{ route('admingudang.transaksi.index') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors {{ request()->routeIs('admingudang.transaksi.index') ? 'bg-blue-600' : '' }}">
-        <i class="fas fa-money-bill-wave text-2xl"></i>
-        <span class="text-xl">Transaksi</span>
-      </a>
-      <a href="{{ route('logout') }}" class="flex items-center space-x-4 px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
-        <i class="fas fa-sign-out-alt text-2xl"></i>
-        <span class="text-xl">Logout</span>
-      </a>
-    </nav>
-    <div class="absolute bottom-4 left-0 right-0 text-center text-gray-400 text-xs">
-      &copy; {{ date('Y') }} SmartWarehouse
-    </div>
-  </div>
+  </aside>
 
   <!-- Main Content -->
-  <div id="main-content" class="md:ml-72 p-6">
-    @yield('content')
-  </div>
+  <main id="main-content" class="md:ml-64 min-h-screen p-6 bg-gray-50">
+    <div class="max-w-screen-2xl mx-auto">
+      @yield('content')
+    </div>
+  </main>
 
-  <!-- Script to toggle sidebar -->
+  <!-- Scripts -->
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
